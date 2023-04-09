@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lotto_02</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>  
+  <script>
+    const bodyTag = document.querySelector('body')
+    
+    const container = document.createElement('div')
+    const scrollToBottom = () => {
+      container.scrollTop = container.scrollHeight
+    }
+
+    const divBtn = document.createElement('div')
+    const divP = document.createElement('div')
+    divP.style.height = '80px'
+
+    const btn = document.createElement('button')
+    btn.disabled = true
+
+    const btnLoop = document.createElement('button')
+    btnLoop.textContent = '동작'
+
+    const inputTag1 = document.createElement('input')
+    inputTag1.style.width = '2.5rem'
+
+    const inputTag2 = document.createElement('input')
+    inputTag2.style.width = '2.5rem'
+
+    const inputTag3 = document.createElement('input')
+    inputTag3.style.width = '2.5rem'
+
+    const inputTag4 = document.createElement('input')
+    inputTag4.style.width = '2.5rem'
+
+    const inputTag5 = document.createElement('input')
+    inputTag5.style.width = '2.5rem'
+
+    const inputTag6 = document.createElement('input')
+    inputTag6.style.width = '2.5rem'
+
+    const inputTag7 = document.createElement('input')
+    inputTag7.style.width = '2.5rem'
+
+    const inputLoopTag = document.createElement('input')
+    inputLoopTag.style.width = '2.5rem'
+    inputLoopTag.classList.add('ms-5')
+
+
+    
+
+    const spanTag = document.createElement('span')
+    spanTag.textContent = '로또 번호 :  '
+    spanTag.classList.add('me-2')
+    const pTag = document.createElement('p')
+
+    
+
+    divBtn.classList.add('d-flex', 'justify-content-center', 'mt-5')
+    
+    divP.classList.add('d-flex', 'justify-content-center', 'align-items-center')
+
+    btn.textContent = '생성'
+    btn.classList.add('btn', 'btn-primary')
+    btnLoop.classList.add('btn', 'btn-primary')
+
+    divBtn.appendChild(inputTag1)
+    divBtn.appendChild(inputTag2)
+    divBtn.appendChild(inputTag3)
+    divBtn.appendChild(inputTag4)
+    divBtn.appendChild(inputTag5)
+    divBtn.appendChild(inputTag6)
+    divBtn.appendChild(inputTag7)
+    divBtn.appendChild(btn)
+    divBtn.appendChild(inputLoopTag)
+    divBtn.appendChild(btnLoop)
+
+    divP.appendChild(spanTag)
+    divP.appendChild(pTag)
+
+    let btnClicked = false
+
+    for (let i = 1; i < 8; i++) {
+      if (i === 7) {
+        const plusBonus = document.createElement('span')
+        plusBonus.classList.add('fs-3')
+        plusBonus.textContent = '+'
+        divP.appendChild(plusBonus)
+      }
+      const divPNum = document.createElement('div')
+      const divTmp = 'lotto' + String(i)
+      const numTmp = 'lottoNum' + String(i)
+      divPNum.setAttribute('id', divTmp)
+      divPNum.style.width = '3rem'
+      divPNum.style.height = '3rem'
+      divPNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+      divPNum.style.backgroundColor = 'gray'
+
+      const spanPTag = document.createElement('span')
+      spanPTag.setAttribute('id', numTmp)
+      spanPTag.textContent = ''
+
+      divPNum.appendChild(spanPTag)
+      divP.appendChild(divPNum)
+    }
+    
+    bodyTag.appendChild(divBtn)
+    bodyTag.appendChild(divP)
+    bodyTag.appendChild(container)
+
+    const number = _.range(1, 46)
+
+    const lottoNumber = []
+    let bonusNumber = 0
+    let setRank = ''
+
+    const btnEvent = (e) => {
+      // 로또 번호 생성
+      let cnt = 0
+      let bonus = 0
+      const lotto = _.sortBy(_.sampleSize(number, 6))
+      // const lotto = [1, 2, 3, 4, 5, 7]
+      
+      lotto.push('')
+
+      const divLotto = document.createElement('div')
+      divLotto.classList.add('d-flex', 'justify-content-center', 'container', 'align-items-center')
+      bodyTag.appendChild(divLotto)
+      
+      // 같은 수 몇개인지 구하기
+      lotto.forEach((num) => {
+        lottoNumber.forEach((lot) => {
+          if (num === lot) {
+            cnt += 1
+          }
+        });
+        if (num === bonusNumber) {
+          bonus = 1
+        }
+      });
+
+      if (cnt < 3 ) {
+        lotto[6] = '꽝'
+      } else if (cnt === 3) {
+        lotto[6] = '5등'
+      } else if (cnt === 4) {
+        lotto[6] = '4등'
+      } else if (cnt === 5) {
+        if (bonus === 1) {
+          lotto[6] = '2등'
+        } else {
+          lotto[6] = '3등'
+        }
+      } else if (cnt === 6) {
+        lotto[6] = '1등'
+      }
+
+      // 1~10번까지는 노란색, 11~20번은 파란색, 21~30번은 빨간색, 31~40번은 회색, 41~45번은 녹색
+      lotto.forEach((num) => {
+        const divNum = document.createElement('div')
+        const spanTag = document.createElement('span')
+
+        if (num >= 41) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 31) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 21) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 11) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 1){
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+          spanTag.textContent = num
+        } else {
+          if (num === '꽝') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center', 'pb-2')
+            spanTag.textContent = '💣'
+            spanTag.classList.add('fs-1')
+          } else if (num === '5등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            divNum.style.border = '3px solid rgb(' + [247, 137, 74].join(',') + ')'
+            spanTag.textContent = '5'
+            spanTag.classList.add('fs-2')
+            spanTag.style.color = 'rgb(' + [247, 137, 74].join(',') + ')'
+          } else if (num === '4등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            divNum.style.border = '3px solid rgb(' + [247, 137, 74].join(',') + ')'
+            spanTag.textContent = '4'
+            spanTag.classList.add('fs-2')
+            spanTag.style.color = 'rgb(' + [247, 137, 74].join(',') + ')'
+          } else if (num === '3등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            spanTag.textContent = '🥉'
+            spanTag.classList.add('fs-1')
+          } else if (num === '2등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            spanTag.textContent = '🥈'
+            spanTag.classList.add('fs-1')
+          } else if (num === '1등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            spanTag.textContent = '🥇'
+            spanTag.classList.add('fs-1')
+          }
+        }
+
+        divNum.style.width = '3rem'
+        divNum.style.height = '3rem'
+
+        divNum.appendChild(spanTag)
+        divLotto.appendChild(divNum)
+        container.appendChild(divLotto)
+        scrollToBottom()
+      });
+
+      console.log(`당첨번호 : ${lottoNumber} 보너스 번호 : ${bonusNumber} 랜덤 번호 : ${lotto.slice(0, 6)} 등수 : ${lotto[6]}`)
+    }
+
+    const btnLoopEvent = (e) => {
+      console.log(setRank)
+      let loopCnt = 0
+      let lotto = []
+      const divLotto = document.createElement('div')
+      divLotto.classList.add('d-flex', 'justify-content-center', 'container', 'align-items-center')
+      bodyTag.appendChild(divLotto)
+
+      while (true) {
+        loopCnt += 1
+        // 로또 번호 생성
+        let cnt = 0
+        let bonus = 0
+        lotto = _.sortBy(_.sampleSize(number, 6))
+        // lotto = [1, 2, 3, 4, 5, 6]
+        
+        lotto.push('')
+  
+        // 같은 수 몇개인지 구하기
+        lotto.forEach((num) => {
+          lottoNumber.forEach((lot) => {
+            if (num === lot) {
+              cnt += 1
+            }
+          });
+          if (num === bonusNumber) {
+            bonus = 1
+          }
+        });
+  
+        if (cnt < 3 ) {
+          lotto[6] = '꽝'
+        } else if (cnt === 3) {
+          lotto[6] = '5등'
+        } else if (cnt === 4) {
+          lotto[6] = '4등'
+        } else if (cnt === 5) {
+          if (bonus === 1) {
+            lotto[6] = '2등'
+          } else {
+            lotto[6] = '3등'
+          }
+        } else if (cnt === 6) {
+          lotto[6] = '1등'
+        }
+        console.log(`당첨번호 : ${lottoNumber} 보너스 번호 : ${bonusNumber} 랜덤 번호 : ${lotto.slice(0, 6)} 등수 : ${lotto[6]}`)
+        if (lotto[6] === setRank) {
+          console.log(loopCnt)
+          break
+        }
+      }
+
+      // 1~10번까지는 노란색, 11~20번은 파란색, 21~30번은 빨간색, 31~40번은 회색, 41~45번은 녹색
+      lotto.forEach((num) => {
+        const divNum = document.createElement('div')
+        const spanTag = document.createElement('span')
+
+        if (num >= 41) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 31) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 21) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 11) {
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+          spanTag.textContent = num
+        } else if (num >= 1){
+          divNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+          spanTag.textContent = num
+        } else {
+          if (num === '꽝') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center', 'pb-2')
+            spanTag.textContent = '💣'
+            spanTag.classList.add('fs-1')
+          } else if (num === '5등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            divNum.style.border = '3px solid rgb(' + [247, 137, 74].join(',') + ')'
+            spanTag.textContent = '5'
+            spanTag.classList.add('fs-2')
+            spanTag.style.color = 'rgb(' + [247, 137, 74].join(',') + ')'
+          } else if (num === '4등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            divNum.style.border = '3px solid rgb(' + [247, 137, 74].join(',') + ')'
+            spanTag.textContent = '4'
+            spanTag.classList.add('fs-2')
+            spanTag.style.color = 'rgb(' + [247, 137, 74].join(',') + ')'
+          } else if (num === '3등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            spanTag.textContent = '🥉'
+            spanTag.classList.add('fs-1')
+          } else if (num === '2등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            spanTag.textContent = '🥈'
+            spanTag.classList.add('fs-1')
+          } else if (num === '1등') {
+            divNum.classList.add('d-flex', 'm-3', 'align-items-center', 'justify-content-center')
+            spanTag.textContent = '🥇'
+            spanTag.classList.add('fs-1')
+          }
+        }
+
+        divNum.style.width = '3rem'
+        divNum.style.height = '3rem'
+
+        divNum.appendChild(spanTag)
+        divLotto.appendChild(divNum)
+        container.appendChild(divLotto)
+        scrollToBottom()
+      });
+
+      const cntDiv = document.createElement('div')
+      const cntSpan = document.createElement('span')
+      cntSpan.textContent = `시도 횟수 : ${loopCnt}, 비용 : ${loopCnt * 1000}`
+
+      cntDiv.appendChild(cntSpan)
+      divLotto.appendChild(cntDiv)
+    }
+
+    const displayNum = (e) => {
+      console.log(e)
+      const tmp = e.target.value
+      if (tmp < 1 & tmp > 45) {
+        alert('1~45')
+        console.log('alert')
+      } else if (e.inputType === 'deleteContentBackward') {
+        console.log('back')
+        
+      } else {
+        const divPNum = document.createElement('div')
+        const spanPTag = document.createElement('span')
+        divPNum.style.width = '3rem'
+        divPNum.style.height = '3rem'
+        if (tmp >= 41) {
+          divPNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+          spanPTag.textContent = tmp
+        } else if (tmp >= 31) {
+          divPNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+          spanPTag.textContent = tmp
+        } else if (tmp >= 21) {
+          divPNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+          spanPTag.textContent = tmp
+        } else if (tmp >= 11) {
+          divPNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+          spanPTag.textContent = tmp
+        } else if (tmp >= 1){
+          divPNum.classList.add('d-flex', 'rounded-circle', 'm-3', 'align-items-center', 'justify-content-center')
+          divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+          spanPTag.textContent = tmp
+        }
+        divPNum.appendChild(spanPTag)
+        divP.appendChild(divPNum)
+      }
+    }
+
+    inputTag1.addEventListener('keydown', (e) => {
+      console.log(e)
+      if (e.code === 'Space') {
+        const tmp = e.target.value
+        if (tmp < 1 | tmp > 45) {
+          alert('1~45')
+          e.target.value = ''
+        } else {
+          lottoNumber.push(Number(tmp))
+          const divPNum = document.querySelector('#lotto1')
+          const spanPTag = document.querySelector('#lottoNum1')          
+          if (tmp >= 41) {
+            divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 31) {
+            divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 21) {
+            divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 11) {
+            divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 1){
+            divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+            spanPTag.textContent = tmp
+          }
+          inputTag2.focus()
+        }
+      }
+    })
+    inputTag2.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        const tmp = e.target.value
+        if (tmp < 1 | tmp > 45) {
+          alert('1~45')
+          e.target.value = ''
+        } else {
+          lottoNumber.push(Number(tmp))
+          const divPNum = document.querySelector('#lotto2')
+          const spanPTag = document.querySelector('#lottoNum2')          
+          if (tmp >= 41) {
+            divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 31) {
+            divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 21) {
+            divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 11) {
+            divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 1){
+            divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+            spanPTag.textContent = tmp
+          }
+          inputTag3.focus()
+        }
+      }
+    })
+    inputTag3.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        const tmp = e.target.value
+        if (tmp < 1 | tmp > 45) {
+          alert('1~45')
+          e.target.value = ''
+        } else {
+          lottoNumber.push(Number(tmp))
+          const divPNum = document.querySelector('#lotto3')
+          const spanPTag = document.querySelector('#lottoNum3')          
+          if (tmp >= 41) {
+            divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 31) {
+            divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 21) {
+            divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 11) {
+            divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 1){
+            divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+            spanPTag.textContent = tmp
+          }
+          inputTag4.focus()
+        }
+      }
+    })
+    inputTag4.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        const tmp = e.target.value
+        if (tmp < 1 | tmp > 45) {
+          alert('1~45')
+          e.target.value = ''
+        } else {
+          lottoNumber.push(Number(tmp))
+          const divPNum = document.querySelector('#lotto4')
+          const spanPTag = document.querySelector('#lottoNum4')          
+          if (tmp >= 41) {
+            divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 31) {
+            divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 21) {
+            divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 11) {
+            divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 1){
+            divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+            spanPTag.textContent = tmp
+          }
+          inputTag5.focus()
+        }
+      }
+    })
+    inputTag5.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        const tmp = e.target.value
+        if (tmp < 1 | tmp > 45) {
+          alert('1~45')
+          e.target.value = ''
+        } else {
+          lottoNumber.push(Number(tmp))
+          const divPNum = document.querySelector('#lotto5')
+          const spanPTag = document.querySelector('#lottoNum5')          
+          if (tmp >= 41) {
+            divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 31) {
+            divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 21) {
+            divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 11) {
+            divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 1){
+            divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+            spanPTag.textContent = tmp
+          }
+          inputTag6.focus()
+        }
+      }
+    })
+    inputTag6.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        const tmp = e.target.value
+        if (tmp < 1 | tmp > 45) {
+          alert('1~45')
+          e.target.value = ''
+        } else {
+          lottoNumber.push(Number(tmp))
+          const divPNum = document.querySelector('#lotto6')
+          const spanPTag = document.querySelector('#lottoNum6')          
+          if (tmp >= 41) {
+            divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 31) {
+            divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 21) {
+            divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 11) {
+            divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 1){
+            divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+            spanPTag.textContent = tmp
+          }
+          inputTag7.focus()
+        }
+      }
+    })
+    inputTag7.addEventListener('keydown', (e) => {      
+      if (e.code === 'Space') {
+        const tmp = e.target.value
+        if (tmp < 1 | tmp > 45) {
+          alert('1~45')
+          e.target.value = ''
+        } else {
+          lottoNumber.push(Number(tmp))
+          const divPNum = document.querySelector('#lotto7')
+          const spanPTag = document.querySelector('#lottoNum7')          
+          if (tmp >= 41) {
+            divPNum.style.backgroundColor = 'rgb(' + [176,216,64].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 31) {
+            divPNum.style.backgroundColor = 'rgb(' + [170,170,170].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 21) {
+            divPNum.style.backgroundColor = 'rgb(' + [255,114,114].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 11) {
+            divPNum.style.backgroundColor = 'rgb(' + [105,200,242].join(',') + ')'
+            spanPTag.textContent = tmp
+          } else if (tmp >= 1){
+            divPNum.style.backgroundColor = 'rgb(' + [251,196,0].join(',') + ')'
+            spanPTag.textContent = tmp
+          }
+          btn.disabled = false
+          btn.focus()
+        }
+      }
+    })
+    inputLoopTag.addEventListener('input', (e) => {
+      const tmp = e.target.value
+      if (tmp < 1 | tmp > 5) {
+        alert('1~5')
+        e.target.value = ''
+      } else {
+        const tmp = e.target.value
+        setRank = tmp.slice(-1) + '등'
+        btnLoop.focus()
+      }      
+    })
+    
+    btn.addEventListener('click', btnEvent)
+    btnLoop.addEventListener('click', btnLoopEvent)
+    
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"></script>
+</body>
+</html>

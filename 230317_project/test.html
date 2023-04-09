@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lotto_01</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="..." class="rounded me-2" alt="...">
+        <strong class="me-auto">Bootstrap</strong>
+        <small>11 mins ago</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        Hello, world! This is a toast message.
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>  
+  <script>
+    const bodyTag = document.querySelector('body')
+    const divTag = document.createElement('div')
+    const btn = document.createElement('button')
+
+    divTag.classList.add('d-flex', 'justify-content-center', 'mt-5')
+
+    btn.textContent = '생성'
+    btn.classList.add('btn', 'btn-primary')
+
+    divTag.appendChild(btn)
+    bodyTag.appendChild(divTag)
+
+    const number = _.range(1, 46)
+
+    const toastLiveExample = document.querySelector('#liveToast')
+
+
+    btn.addEventListener('click', (e) => {
+      const lotto = _.sortBy(_.sampleSize(number, 6))
+      console.log(lotto)
+      const toast = new bootstrap.Toast(toastLiveExample)
+      toast.show()
+    })
+
+    
+  </script>
+
+
+  <!--  -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"></script>
+</body>
+</html>
